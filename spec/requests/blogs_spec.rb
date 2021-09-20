@@ -21,7 +21,7 @@ RSpec.describe "Blogs", type: :request do
   describe 'GET /new' do
     it 'redirects when the user is not logged in' do
       get new_blog_path
-      expect(response.status).to eq 302
+      expect(response).to_not be_successful
     end
 
     it 'returns a status of 200 if logged in' do
