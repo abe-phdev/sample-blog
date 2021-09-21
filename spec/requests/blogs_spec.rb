@@ -10,7 +10,7 @@ RSpec.describe "Blogs", type: :request do
   end
 
   describe 'GET /show' do
-    let(:blog) { FactoryBot.create :blog }
+    let(:blog) { create(:blog) }
 
     it 'allows user to view a blog' do
       get blog_url(blog)
@@ -41,8 +41,12 @@ RSpec.describe "Blogs", type: :request do
   end
 
   describe 'GET /create' do
-    it 'is ok' do
-      expect(2).to eq 2
+    let(:blog) { create(:blog) }
+
+    it 'allows user to create a new blog' do
+      expect do
+        post blogs_path, params: { post: blog }
+      end.to change(Blog, :count).by(1)
     end
   end
 end
