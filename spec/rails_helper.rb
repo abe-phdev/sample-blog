@@ -70,3 +70,7 @@ Shoulda::Matchers.configure do |config|
   end
 end
 
+def sign_in(user)
+  params = { user: { email: user.email, password: user.password } }
+  post user_session_path, params: params
+end
