@@ -41,11 +41,24 @@ RSpec.describe "Blogs", type: :request do
   end
 
   describe 'GET /create' do
-    let(:blog) { create(:blog) }
+    let(:user) { create(:user) }
+    let(:valid_attributes) do
+      {
+        'title' => Faker::Book.title, 
+        'body' => Faker::Lorem.paragraphs,
+        'user_id' => user.id
+      }
+    end
+
+    before do
+      sign_in(user)
+    end
 
     it 'allows user to create a new blog' do
       expect do
-        post blogs_path, params: { post: blog }
+        blog = Blog.new(valid_attributes)
+        blog.save
+        post blogs_path, params: { blog: valid_attributes }
       end.to change(Blog, :count).by(1)
     end
   end
