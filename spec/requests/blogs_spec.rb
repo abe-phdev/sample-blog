@@ -50,16 +50,27 @@ RSpec.describe "Blogs", type: :request do
       }
     end
 
-    before do
-      sign_in(user)
+    context 'when with authenticated user' do
+      before do
+        sign_in(user)
+      end
+
+      it 'allows user to create a new blog' do
+        expect do
+          blog = Blog.new(valid_attributes)
+          blog.save
+          post blogs_path, params: { blog: valid_attributes }
+        end.to change(Blog, :count).by(1)
+      end
     end
 
-    it 'allows user to create a new blog' do
-      expect do
-        blog = Blog.new(valid_attributes)
-        blog.save
-        post blogs_path, params: { blog: valid_attributes }
-      end.to change(Blog, :count).by(1)
+    context 'when with no authenticated user' do
+      it 'will redirect to log in' do
+          blog = Blog.new(valid_attributes)
+          blog.save
+          post blogs_path, params: { blog: valid_attributes }
+          expect(response).to redirect_to(new_user_session_path)
+      end
     end
   end
 end
